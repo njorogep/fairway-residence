@@ -56,7 +56,7 @@
 
     // Close if resized back to desktop width
     window.addEventListener('resize', () => {
-      if(window.innerWidth > 860 && isOpen()) closeMenu();
+      if(window.innerWidth > 1140 && isOpen()) closeMenu();
     });
   })();
 
@@ -172,5 +172,20 @@
       // All checks passed — let the form submit normally to FormSubmit.
       sendBtn.disabled = true;
       sendBtn.textContent = 'Sending…';
+    });
+  })();
+
+  // ---------- Amenities flip cards (tap-to-flip on touch devices) ----------
+  (function(){
+    const cards = document.querySelectorAll('.amenity');
+    if(!cards.length) return;
+    const supportsHover = window.matchMedia('(hover: hover)').matches;
+    if(supportsHover) return; // desktop/hover devices use CSS :hover
+    cards.forEach(c => {
+      c.addEventListener('click', () => {
+        const wasFlipped = c.classList.contains('flipped');
+        cards.forEach(x => x.classList.remove('flipped'));
+        if(!wasFlipped) c.classList.add('flipped');
+      });
     });
   })();
