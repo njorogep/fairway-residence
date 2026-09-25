@@ -5,7 +5,7 @@
     floatBook.classList.toggle('show', !entry.isIntersecting);
     floatWhatsapp.classList.toggle('show', !entry.isIntersecting);
   }, { threshold: 0.05 });
-  io.observe(hero);
+  if(hero) io.observe(hero);
 
   // ---------- Mobile hamburger menu ----------
   (function(){
@@ -66,7 +66,7 @@
     const dots = document.querySelectorAll('#heroDots .hero-dot');
     const prevBtn = document.getElementById('heroPrev');
     const nextBtn = document.getElementById('heroNext');
-    if(!slides.length) return;
+    if(!slides.length || !hero) return;
 
     let current = 0;
     let timer = null;
