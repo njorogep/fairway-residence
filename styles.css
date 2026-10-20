@@ -504,7 +504,14 @@
     background:rgba(238,240,226,0.94); backdrop-filter:blur(8px);
     border-bottom:1px solid var(--line); padding:12px 0;
   }
-  .ph-filters .wrap{display:flex; gap:8px; overflow-x:auto; scrollbar-width:none;}
+  .ph-filters .wrap{display:flex; flex-wrap:wrap; gap:8px;}
+  @media (max-width:640px){
+    /* phones: one swipeable row, with a fade on the right edge hinting there is more */
+    .ph-filters .wrap{flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; padding-right:40px;
+      -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);
+              mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);}
+    .ph-filters .chip{flex:none;}
+  }
   .ph-filters .wrap::-webkit-scrollbar{display:none;}
   .chip{
     flex-shrink:0; font:inherit; font-size:14px; cursor:pointer;
