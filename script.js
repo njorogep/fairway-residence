@@ -189,3 +189,35 @@
       });
     });
   })();
+
+  // ---------- Dated events: sort upcoming, retire past ones automatically ----------
+  // Any element with data-event-date="YYYY-MM-DD" counts as expired from the day after that date.
+  (function(){
+    const today = new Date(); today.setHours(0,0,0,0);
+    const isPast = el => {
+      const [y, m, d] = (el.dataset.eventDate || '').split('-').map(Number);
+      return y && new Date(y, m - 1, d) < today;
+    };
+    // Homepage feature band / hero pill / teasers: hide once the event has passed
+    document.querySelectorAll('[data-event-date]:not(.ev-card)').forEach(el => { if(isPast(el)) el.hidden = true; });
+    // "In 12 days" / "Tomorrow" / "Tonight" countdown labels
+    document.querySelectorAll('[data-countdown]').forEach(el => {
+      const [y, m, d] = el.dataset.countdown.split('-').map(Number);
+      const days = Math.round((new Date(y, m - 1, d) - today) / 86400000);
+      if(days < 0) return;
+      el.textContent = days === 0 ? 'Tonight' : days === 1 ? 'Tomorrow' : 'In ' + days + ' days';
+      el.classList.add('show');
+    });
+
+    // What's On page
+    const upcoming = document.getElementById('upcomingEvents');
+    if(!upcoming) return;
+    const past = document.getElementById('pastEvents');
+    const cards = Array.from(upcoming.querySelectorAll('.ev-card[data-event-date]'));
+    cards.sort((a, b) => a.dataset.eventDate.localeCompare(b.dataset.eventDate));
+    cards.forEach(c => {
+      if(isPast(c)){ past.prepend(c); } else { upcoming.appendChild(c); }
+    });
+    document.getElementById('noUpcoming').hidden = upcoming.querySelector('.ev-card') !== null;
+    document.getElementById('pastWrap').hidden = past.querySelector('.ev-card') === null;
+  })();
